@@ -1,0 +1,1 @@
+desi_coadd_spectra -i /global/cfs/cdirs/desi/spectro/redux/blanc/exposures/20210314/00068646/cframe-[brz]0-*.fits -o /global/cscratch1/sd/mjwilson/desi/SV1/spectra/exposures/NEXP1/80612/20201218/coadd-20201218-0-00068646.fits
