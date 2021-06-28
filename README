@@ -1,2 +1,93 @@
-HETDEX 80495
+HETDEX     80495
+HETDEX-2   80869 (/global/cfs/cdirs/desi/spectro/redux/daily/tiles/cumulative/80869/20210408)
 
+DESILBG    80871 (global/cscratch1/sd/mjwilson/DESILBGSPEC/June21/80871/)
+DESILBG-2  80872 (global/cscratch1/sd/mjwilson/DESILBGSPEC/June21/80872/)
+
+There were two tiles assigned to the Clauds Cosmos field, such that the 5000 fibers picked up a
+different set of targets on each tile at the same location.
+
+We observed for 6 and 6.5 hrs in real time on each.  When weighted by conditions, this comes out to 
+be ~6hrs on each.  It is highly unlikely there will be further opportunities to pick up more time, or more
+fields (over the next five years). 
+
+On the two tiles, in terms of targets, we expect:
+
+DESILBG_TMG_FINAL      931   613
+DESILBG_BXU_FINAL     1221  1721
+DESILBG_G_FINAL        842  1128
+
+a total of 6456 targets.   At the height of Survey Validation, when these were being observed, we continued
+to be working through calibrating the focal plane.  As such, not all of these will have had a fiber placed 
+successfully.  I haven't yet done the latest book keeping on that.
+
+https://data.desi.lbl.gov/desi/users/forero/secondary/dedicated/svntiles/fiberassign-080871.png
+https://data.desi.lbl.gov/desi/users/forero/secondary/dedicated/svntiles/fiberassign-080872.png
+
+Denali:  20201214 to 20210331
+Everest: 
+
+/global/cfs/cdirs/desi/spectro/redux/daily/exposures/20210627/00096310/
+
+NIGHT   TILEID EXPID OBSTYPE  PROGRAM    EXPTIME  EFFTIME_ETC EFFTIME_SPEC EFFTIME  GOALTIME QUALITY COMMENTS
+-------- ------ ----- ------- ---------- --------- ----------- ------------ -------- -------- ------- --------
+20210314  80871 80481 SCIENCE       Test   101.730      58.090       33.560   33.560     -1.0    good       --
+20210314  80871 80482 SCIENCE       Test    98.733      55.937       -1.000   55.937     -1.0     bad       --
+20210314  80871 80483 SCIENCE COSMOS LBG   900.060      -1.000      850.382  850.382     -1.0    good       --
+20210314  80871 80486 SCIENCE COSMOS LBG   900.045      -1.000      995.616  995.616     -1.0    good       --
+20210314  80871 80487 SCIENCE COSMOS LBG   900.062      -1.000      662.161  662.161     -1.0    good       --
+20210314  80871 80488 SCIENCE COSMOS LBG   900.057      -1.000      775.787  775.787     -1.0    good       --
+20210314  80871 80489 SCIENCE COSMOS LBG   900.060      -1.000      933.214  933.214     -1.0    good       --
+20210314  80871 80490 SCIENCE COSMOS LBG   900.060      -1.000     1216.671 1216.671     -1.0    good       --
+20210314  80871 80493 SCIENCE COSMOS LBG   900.068      -1.000      841.878  841.878     -1.0    good       --
+20210314  80871 80494 SCIENCE COSMOS LBG   900.054      -1.000      959.081  959.081     -1.0    good       --
+20210408  80871 83970 SCIENCE COSMOS LBG  1220.041      -1.000     1197.046 1197.046     -1.0    good       --
+20210408  80871 83971 SCIENCE COSMOS LBG  1220.055      -1.000     1192.366 1192.366     -1.0    good       --
+20210408  80871 83972 SCIENCE COSMOS LBG  1220.057      -1.000     1254.663 1254.663     -1.0    good       --
+20210408  80871 83973 SCIENCE COSMOS LBG  1220.035      -1.000     1081.366 1081.366     -1.0    good       --
+20210408  80871 83976 SCIENCE       test    80.053      -1.000       18.674   18.674     -1.0    good       --
+20210408  80871 83977 SCIENCE COSMOS LBG  1220.045      -1.000     1329.727 1329.727     -1.0    good       --
+20210408  80871 83978 SCIENCE COSMOS LBG  1220.055      -1.000     1009.073 1009.073     -1.0    good       --
+20210410  80871 84216 SCIENCE COSMOS LBG  1220.023      -1.000     2077.641 2077.641     -1.0    good       --
+20210412  80871 84507 SCIENCE COSMOS LBG  1220.049      -1.000     1123.423 1123.423     -1.0    good       --
+20210412  80871 84508 SCIENCE COSMOS LBG  1220.059      -1.000      945.150  945.150     -1.0    good       --
+20210430  80871 86733 SCIENCE COSMOS LBG  1220.053      -1.000     1284.331 1284.331     -1.0    good       --
+20210430  80871 86734 SCIENCE COSMOS LBG  1220.060      -1.000     1231.692 1231.692     -1.0    good       --
+
+See ~/DESILBGSPEC gen_coadd.ipynb for the code to generate the commands. 
+
+export PETAL=0 # 1,2,3,4,5
+
+desi_coadd_spectra -i /global/cfs/cdirs/desi/spectro/redux/denali/exposures/20210314/00080483/cframe-[brz]$PETAL-*.fits /global/cfs/cdirs/desi/spectro/redux/denali/exposures/20210314/00080486/cframe-[brz]$PETAL-*.fits /global/cfs/cdirs/desi/spectro/redux/denali/exposures/20210314/00080487/cframe-[brz]$PETAL-*.fits /global/cfs/cdirs/desi/spectro/redux/denali/exposures/20210314/00080488/cframe-[brz]$PETAL-*.fits /global/cfs/cdirs/desi/spectro/redux/denali/exposures/20210314/00080489/cframe-[brz]$PETAL-*.fits /global/cfs/cdirs/desi/spectro/redux/denali/exposures/20210314/00080490/cframe-[brz]$PETAL-*.fits /global/cfs/cdirs/desi/spectro/redux/denali/exposures/20210314/00080493/cframe-[brz]$PETAL-*.fits /global/cfs/cdirs/desi/spectro/redux/denali/exposures/20210314/00080494/cframe-[brz]$PETAL-*.fits /global/cfs/cdirs/desi/spectro/redux/daily/exposures/20210408/00083970/cframe-[brz]$PETAL-*.fits /global/cfs/cdirs/desi/spectro/redux/daily/exposures/20210408/00083971/cframe-[brz]$PETAL-*.fits /global/cfs/cdirs/desi/spectro/redux/daily/exposures/20210408/00083972/cframe-[brz]$PETAL-*.fits /global/cfs/cdirs/desi/spectro/redux/daily/exposures/20210408/00083973/cframe-[brz]$PETAL-*.fits /global/cfs/cdirs/desi/spectro/redux/daily/exposures/20210408/00083977/cframe-[brz]$PETAL-*.fits /global/cfs/cdirs/desi/spectro/redux/daily/exposures/20210408/00083978/cframe-[brz]$PETAL-*.fits /global/cfs/cdirs/desi/spectro/redux/daily/exposures/20210410/00084216/cframe-[brz]$PETAL-*.fits /global/cfs/cdirs/desi/spectro/redux/daily/exposures/20210412/00084507/cframe-[brz]$PETAL-*.fits /global/cfs/cdirs/desi/spectro/redux/daily/exposures/20210412/00084508/cframe-[brz]$PETAL-*.fits /global/cfs/cdirs/desi/spectro/redux/daily/exposures/20210430/00086733/cframe-[brz]$PETAL-*.fits /global/cfs/cdirs/desi/spectro/redux/daily/exposures/20210430/00086734/cframe-[brz]$PETAL-*.fits -o /global/cscratch1/sd/mjwilson/DESILBGSPEC/June21/80871/coadd-80871-$PETAL.fits
+
+export PETAL=6 (exposures on the night of 20210314 missing b arm).
+
+desi_coadd_spectra -i /global/cfs/cdirs/desi/spectro/redux/daily/exposures/20210408/00083970/cframe-[brz]$PETAL-*.fits /global/cfs/cdirs/desi/spectro/redux/daily/exposures/20210408/00083971/cframe-[brz]$PETAL-*.fits /global/cfs/cdirs/desi/spectro/redux/daily/exposures/20210408/00083972/cframe-[brz]$PETAL-*.fits /global/cfs/cdirs/desi/spectro/redux/daily/exposures/20210408/00083973/cframe-[brz]$PETAL-*.fits /global/cfs/cdirs/desi/spectro/redux/daily/exposures/20210408/00083977/cframe-[brz]$PETAL-*.fits /global/cfs/cdirs/desi/spectro/redux/daily/exposures/20210408/00083978/cframe-[brz]$PETAL-*.fits /global/cfs/cdirs/desi/spectro/redux/daily/exposures/20210410/00084216/cframe-[brz]$PETAL-*.fits /global/cfs/cdirs/desi/spectro/redux/daily/exposures/20210412/00084507/cframe-[brz]$PETAL-*.fits /global/cfs/cdirs/desi/spectro/redux/daily/exposures/20210412/00084508/cframe-[brz]$PETAL-*.fits /global/cfs/cdirs/desi/spectro/redux/daily/exposures/20210430/00086733/cframe-[brz]$PETAL-*.fits /global/cfs/cdirs/desi/spectro/redux/daily/exposures/20210430/00086734/cframe-[brz]$PETAL-*.fits -o /global/cscratch1/sd/mjwilson/DESILBGSPEC/June21/80871/coadd-80871-$PETAL.fits
+
+ NIGHT   TILEID EXPID OBSTYPE PROGRAM  EXPTIME  EFFTIME_ETC EFFTIME_SPEC EFFTIME  GOALTIME QUALITY COMMENTS
+-------- ------ ----- ------- ------- --------- ----------- ------------ -------- -------- ------- --------
+20210506  80872 87468 SCIENCE  COSMOS  1220.063      -1.000      236.774  236.774     -1.0    good       --
+20210507  80872 87588 SCIENCE  COSMOS  1220.050      -1.000      693.932  693.932     -1.0    good       --
+20210507  80872 87589 SCIENCE  COSMOS  1220.062      -1.000     1574.113 1574.113     -1.0    good       --
+20210507  80872 87590 SCIENCE  COSMOS   684.218      -1.000      711.060  711.060     -1.0    good       --
+20210507  80872 87591 SCIENCE  COSMOS   279.267      -1.000      199.142  199.142     -1.0    good       --
+20210507  80872 87592 SCIENCE  COSMOS  1220.044      -1.000     1417.350 1417.350     -1.0    good       --
+20210508  80872 87696 SCIENCE  COSMOS  1220.067      -1.000      891.153  891.153     -1.0    good       --
+20210508  80872 87697 SCIENCE  COSMOS  1220.041      -1.000     1503.223 1503.223     -1.0    good       --
+20210508  80872 87698 SCIENCE  COSMOS  1220.050      -1.000     1388.388 1388.388     -1.0    good       --
+20210508  80872 87699 SCIENCE  COSMOS  1220.056      -1.000      541.043  541.043     -1.0    good       --
+20210508  80872 87700 SCIENCE  COSMOS  1220.058      -1.000      756.956  756.956     -1.0    good       --
+20210509  80872 87809 SCIENCE  COSMOS    51.700      -1.000        0.000    0.000     -1.0    good       --
+20210509  80872 87810 SCIENCE  COSMOS  1220.054      -1.000     1341.803 1341.803     -1.0    good       --
+20210509  80872 87811 SCIENCE  COSMOS  1220.048      -1.000     1710.531 1710.531     -1.0    good       --
+20210509  80872 87812 SCIENCE  COSMOS  1220.073      -1.000     1201.669 1201.669     -1.0    good       --
+20210509  80872 87813 SCIENCE  COSMOS  1220.053      -1.000      983.205  983.205     -1.0    good       --
+20210511  80872 88035 SCIENCE  COSMOS  1220.062      -1.000     1635.605 1635.605     -1.0    good       --
+20210511  80872 88036 SCIENCE  COSMOS  1220.054      -1.000     1332.163 1332.163     -1.0    good       --
+20210511  80872 88037 SCIENCE  COSMOS  1220.044      -1.000     1325.107 1325.107     -1.0    good       --
+20210512  80872 88147 SCIENCE  COSMOS   395.008      -1.000        0.000    0.000     -1.0    good       --
+20210512  80872 88148 SCIENCE  COSMOS  1200.048      -1.000      973.507  973.507     -1.0    good       --
+20210512  80872 88149 SCIENCE  COSMOS  1200.033      -1.000      844.913  844.913     -1.0    good       --
+
+
+desi_coadd_spectra -i /global/cfs/cdirs/desi/spectro/redux/daily/exposures/20210506/00087468/cframe-[brz]$PETAL-*.fits /global/cfs/cdirs/desi/spectro/redux/daily/exposures/20210507/00087588/cframe-[brz]$PETAL-*.fits /global/cfs/cdirs/desi/spectro/redux/daily/exposures/20210507/00087589/cframe-[brz]$PETAL-*.fits /global/cfs/cdirs/desi/spectro/redux/daily/exposures/20210507/00087590/cframe-[brz]$PETAL-*.fits /global/cfs/cdirs/desi/spectro/redux/daily/exposures/20210507/00087591/cframe-[brz]$PETAL-*.fits /global/cfs/cdirs/desi/spectro/redux/daily/exposures/20210507/00087592/cframe-[brz]$PETAL-*.fits /global/cfs/cdirs/desi/spectro/redux/daily/exposures/20210508/00087696/cframe-[brz]$PETAL-*.fits /global/cfs/cdirs/desi/spectro/redux/daily/exposures/20210508/00087697/cframe-[brz]$PETAL-*.fits /global/cfs/cdirs/desi/spectro/redux/daily/exposures/20210508/00087698/cframe-[brz]$PETAL-*.fits /global/cfs/cdirs/desi/spectro/redux/daily/exposures/20210508/00087699/cframe-[brz]$PETAL-*.fits /global/cfs/cdirs/desi/spectro/redux/daily/exposures/20210508/00087700/cframe-[brz]$PETAL-*.fits /global/cfs/cdirs/desi/spectro/redux/daily/exposures/20210509/00087810/cframe-[brz]$PETAL-*.fits /global/cfs/cdirs/desi/spectro/redux/daily/exposures/20210509/00087811/cframe-[brz]$PETAL-*.fits /global/cfs/cdirs/desi/spectro/redux/daily/exposures/20210509/00087812/cframe-[brz]$PETAL-*.fits /global/cfs/cdirs/desi/spectro/redux/daily/exposures/20210509/00087813/cframe-[brz]$PETAL-*.fits /global/cfs/cdirs/desi/spectro/redux/daily/exposures/20210511/00088035/cframe-[brz]$PETAL-*.fits /global/cfs/cdirs/desi/spectro/redux/daily/exposures/20210511/00088036/cframe-[brz]$PETAL-*.fits /global/cfs/cdirs/desi/spectro/redux/daily/exposures/20210511/00088037/cframe-[brz]$PETAL-*.fits /global/cfs/cdirs/desi/spectro/redux/daily/exposures/20210512/00088148/cframe-[brz]$PETAL-*.fits /global/cfs/cdirs/desi/spectro/redux/daily/exposures/20210512/00088149/cframe-[brz]$PETAL-*.fits -o /global/cscratch1/sd/mjwilson/DESILBGSPEC/June21/80872/coadd-80872-$PETAL.fits
