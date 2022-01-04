@@ -37,7 +37,7 @@ for petal in [0,1,2,3,4,5,7,8,9]:
     fmap['ROW'] = np.arange(len(fmap))
         
     isin   = (fmap['SV1_SCND_TARGET'] & scnd_mask['HETDEX_MAIN']) != 0
-    isin  |= (fmap['SV1_SCND_TARGET'] & scnd_mask['HETDEX_HP'])   != 0  
+    isin  |= (fmap['SV1_SCND_TARGET'] & scnd_mask['HETDEX_HP'])   != 0	
 
     isin  &= (fmap['FIBERSTATUS'] == 0)
 

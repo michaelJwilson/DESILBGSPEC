@@ -20,12 +20,15 @@ comp      = []
 
 for petal in [0,1,2,3,4,5,7,8,9]:
     for band in ['B']:
-        dat    = Table.read('/global/cscratch1/sd/mjwilson/DESILBGSPEC/{:d}/deep/zbest-{:d}-{:d}-deep.fits'.format(tile, petal, tile))
+        # dat  = Table.read('/global/cscratch1/sd/mjwilson/DESILBGSPEC/{:d}/deep/zbest-{:d}-{:d}-deep.fits'.format(tile, petal, tile))
+        dat    = Table.read('/global/cscratch1/sd/mjwilson/DESILBGSPEC/{}/cumulative/20210408/v1.1/zbest-{}-{}-thru20210408.fits'.format(tile, petal, tile))
         dat    = dat[dat['DELTACHI2'] > 25.]
-    
-        fmap   = fitsio.read('/global/cscratch1/sd/mjwilson/DESILBGSPEC/{:d}/deep/coadd-{:d}-{:d}-deep.fits'.format(tile, petal, tile), 'FIBERMAP')
-        wave   = fitsio.read('/global/cscratch1/sd/mjwilson/DESILBGSPEC/{:d}/deep/coadd-{:d}-{:d}-deep.fits'.format(tile, petal, tile), '{}_WAVELENGTH'.format(band))
-        flux   = fitsio.read('/global/cscratch1/sd/mjwilson/DESILBGSPEC/{:d}/deep/coadd-{:d}-{:d}-deep.fits'.format(tile, petal, tile), '{}_FLUX'.format(band))
+
+        fpath = '/global/cfs/cdirs/desi/spectro/redux/daily/tiles/cumulative/{}/20210408/coadd-{}-{}-thru20210408.fits'.format(tile, petal, tile)
+        
+        fmap   = fitsio.read(fpath, 'FIBERMAP')
+        wave   = fitsio.read(fpath, '{}_WAVELENGTH'.format(band))
+        flux   = fitsio.read(fpath, '{}_FLUX'.format(band))
 
         isin   = (fmap['SV1_SCND_TARGET'] & scnd_mask['HETDEX_MAIN']) != 0
         isin  |= (fmap['SV1_SCND_TARGET'] & scnd_mask['HETDEX_HP'])   != 0	
@@ -41,7 +44,7 @@ for petal in [0,1,2,3,4,5,7,8,9]:
         flux   = flux[~fmap['Z'].mask]
         fmap   = fmap[~fmap['Z'].mask]
 
-        # Cut on dchisq.
+        # 
         flux   = flux[fmap['Z'] > 2.]
         fmap   = fmap[fmap['Z'] > 2.]
 

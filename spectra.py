@@ -39,16 +39,26 @@ tile      = 80869
 petal     = sys.argv[1]
 
 for band in ['B', 'R', 'Z']:
-    dat   = Table.read('/global/cscratch1/sd/mjwilson/DESILBGSPEC/{:d}/deep/zbest-{:d}-{:d}-deep.fits'.format(tile, petal, tile))
-    dat   = dat[dat['DELTACHI2'] > 25.]
+    # dat = Table.read('/global/cscratch1/sd/mjwilson/DESILBGSPEC/{:d}/deep/zbest-{:d}-{:d}-deep.fits'.format(tile, petal, tile))
+    dat   = Table.read('/global/cscratch1/sd/mjwilson/DESILBGSPEC/{}/cumulative/20210408/zbest-{}-{}-thru20210408.fits'.format(tile, petal, tile))
+
+    print('/global/cscratch1/sd/mjwilson/DESILBGSPEC/{}/cumulative/20210408/zbest-{}-{}-thru20210408.fits'.format(tile, petal, tile))
     
-    fmap  = fitsio.read('/global/cscratch1/sd/mjwilson/DESILBGSPEC/{:d}/deep/coadd-{:d}-{:d}-deep.fits'.format(tile, petal, tile), 'FIBERMAP')
-    wave  = fitsio.read('/global/cscratch1/sd/mjwilson/DESILBGSPEC/{:d}/deep/coadd-{:d}-{:d}-deep.fits'.format(tile, petal, tile), '{}_WAVELENGTH'.format(band))
-    flux  = fitsio.read('/global/cscratch1/sd/mjwilson/DESILBGSPEC/{:d}/deep/coadd-{:d}-{:d}-deep.fits'.format(tile, petal, tile), '{}_FLUX'.format(band))
+    dat   = dat[dat['DELTACHI2'] > dchi2]
 
-    isin  = (fmap['SV1_SCND_TARGET'] & scnd_mask['HETDEX_MAIN']) != 0
-    isin |= (fmap['SV1_SCND_TARGET'] & scnd_mask['HETDEX_HP']) != 0	
+    fpath = '/global/cfs/cdirs/desi/spectro/redux/daily/tiles/cumulative/{}/20210408/coadd-{}-{}-thru20210408.fits'.format(tile, petal, tile)
+    
+    fmap  = fitsio.read(fpath, 'FIBERMAP')
+    wave  = fitsio.read(fpath, '{}_WAVELENGTH'.format(band))
+    flux  = fitsio.read(fpath, '{}_FLUX'.format(band))
 
+    # isin  = (fmap['SV1_SCND_TARGET'] & scnd_mask['HETDEX_MAIN']) != 0
+    # isin |= (fmap['SV1_SCND_TARGET'] & scnd_mask['HETDEX_HP']) != 0	
+
+    isin  = (fmap['SV1_SCND_TARGET'] & scnd_mask['DESILBG_TMG_FINAL']) != 0                                                                                                                                                              
+    isin |= (fmap['SV1_SCND_TARGET'] & scnd_mask['DESILBG_BXU_FINAL']) != 0                                                                                                                                                            
+    isin |= (fmap['SV1_SCND_TARGET'] & scnd_mask['DESILBG_G_FINAL'])   != 0  
+    
     isin &= (fmap['FIBERSTATUS'] == 0)
 
     flux  = flux[isin]
@@ -56,9 +66,13 @@ for band in ['B', 'R', 'Z']:
 
     fmap  = join(fmap, dat, keys='TARGETID', join_type='left')
 
-    nlbg  = np.count_nonzero((fmap['SV1_SCND_TARGET'] & scnd_mask['HETDEX_MAIN']) != 0)
-    nlbg += np.count_nonzero((fmap['SV1_SCND_TARGET'] & scnd_mask['HETDEX_HP'])   != 0)
+    # nlbg  = np.count_nonzero((fmap['SV1_SCND_TARGET'] & scnd_mask['HETDEX_MAIN']) != 0)
+    # nlbg += np.count_nonzero((fmap['SV1_SCND_TARGET'] & scnd_mask['HETDEX_HP'])   != 0)
 
+    nlbg  = np.count_nonzero((fmap['SV1_SCND_TARGET'] & scnd_mask['DESILBG_TMG_FINAL']) != 0)
+    nlbg += np.count_nonzero((fmap['SV1_SCND_TARGET'] & scnd_mask['DESILBG_BXU_FINAL']) != 0)
+    nlbg += np.count_nonzero((fmap['SV1_SCND_TARGET'] & scnd_mask['DESILBG_G_FINAL'])   != 0)
+    
     # Cut on dchisq.
     flux  = flux[~fmap['Z'].mask]
     fmap  = fmap[~fmap['Z'].mask]
@@ -83,23 +97,39 @@ for band in ['B', 'R', 'Z']:
         for ax in axes:
             for sky in skylines:
                 ax.axvline(sky, c='c', lw=0.5, alpha=0.5)
-    
-    for i in range(nplot):
+
+    j = 0
+                
+    for i in range(len(fmap)):
+        tid       =  fmap['TARGETID'][i]
+
+        print(j, tid)
+        
+        if tid not in [103636369670144, 103632628351017, 103636369670147, 103632628350985, 103628866060304, 103632628351021]:
+            continue
+
+        j        += 1
+        
         is_main   = (fmap['SV1_SCND_TARGET'][i] & scnd_mask['HETDEX_MAIN']) != 0
         is_hp     = (fmap['SV1_SCND_TARGET'][i] & scnd_mask['HETDEX_HP'])   != 0
-    
+        
+        is_tmg    = (fmap['SV1_SCND_TARGET'][i] & scnd_mask['DESILBG_TMG_FINAL']) != 0
+        is_bxu    = (fmap['SV1_SCND_TARGET'][i] & scnd_mask['DESILBG_BXU_FINAL']) != 0
+        is_g      = (fmap['SV1_SCND_TARGET'][i] & scnd_mask['DESILBG_G_FINAL'])   != 0
+        
         cflux     = convolve(flux[i,:], gauss_kernel)
 
         if band == 'B':
-            axes[i].axvspan(4300., 4500., alpha=0.2, color='red')
+            axes[j].axvspan(4300., 4500., alpha=0.2, color='red')
         
         if band != 'Z':
-            axes[i].plot(wave, cflux, lw=0.5, alpha=0.75, label='', c='k')
+            axes[j].plot(wave, cflux, lw=0.5, alpha=0.75, label='', c='k')
 
         else:
-            label = '{}  z: {:.2f} (DX2: {:.2f}, MAIN: {:d}, HP: {:d})'.format(fmap['TARGETID'][i], fmap['Z'][i], fmap['DELTACHI2'][i], is_main, is_hp)
-
-            axes[i].axvline(1216. * (1. + fmap['Z'][i]), c='m', lw=0.1, alpha=0.1, linestyle='--')
+            # label = '{}  z: {:.2f} (DX2: {:.2f}, MAIN: {:d}, HP: {:d})'.format(fmap['TARGETID'][i], fmap['Z'][i], fmap['DELTACHI2'][i], is_main, is_hp)
+            label = '{}  z: {:.2f} (DX2: {:.2f}, TMG: {:d}, BXU: {:d}, G: {:d})'.format(fmap['TARGETID'][i], fmap['Z'][i], fmap['DELTACHI2'][i], is_tmg, is_bxu, is_g)
+            
+            axes[j].axvline(1216. * (1. + fmap['Z'][i]), c='m', lw=0.1, alpha=0.1, linestyle='--')
 
             spectype  = fmap['SPECTYPE'][i].strip()                                                                                                                                                                                         
             subtype   = fmap['SUBTYPE'][i].strip()
@@ -109,8 +139,8 @@ for band in ['B', 'R', 'Z']:
             tflux     = templates[fulltype].flux.T.dot(coeff)                                                                                                                                                                               
             twave     = templates[fulltype].wave * (1. + fmap['Z'][i])
 
-            axes[i].plot(wave,  cflux, lw=0.5, alpha=0.75, label=label, c='k')
-            axes[i].plot(twave, tflux, lw=0.5, alpha=0.5, c='m')
+            axes[j].plot(wave,  cflux, lw=0.5, alpha=0.75, label=label, c='k')
+            axes[j].plot(twave, tflux, lw=0.5, alpha=0.5, c='m')
 
 for ax in axes:
     ax.set_yscale('linear')
@@ -118,11 +148,13 @@ for ax in axes:
     ax.set_ylim(bottom=-0.5, top=2.)
     ax.legend(frameon=False, loc=1)            
      
-fig.suptitle('DESIHETDEX: {:d} spectra (${:d} @ \Delta \chi^2 > {}$, {:d} @ z>2) '.format(nlbg, ngood, dchi2, nhiz), y=1.0)
+fig.suptitle('DESILBG: {:d} spectra (${:d} @ \Delta \chi^2 > {}$, {:d} @ z>2) '.format(nlbg, ngood, dchi2, nhiz), y=1.0)
 plt.tight_layout()
 
+pl.savefig('hetdex-matches.pdf')
+
 # /global/cfs/cdirs/desi/www/users
-pl.savefig('/project/projectdirs/desi/users/mjwilson/DESILBGSPEC/{}/redshifts_{:d}.pdf'.format(tile, petal))
+# pl.savefig('/project/projectdirs/desi/users/mjwilson/DESILBGSPEC/{}/redshifts_{}_thru20210408.pdf'.format(tile, petal))
 
 # os.system('chmod --reference=/project/projectdirs/desi/users/mjwilson/plots /project/projectdirs/desi/users/mjwilson/DESILBGSPEC/{}/'.format(tile))
 # os.system('chmod --reference=/project/projectdirs/desi/users/mjwilson/plots /project/projectdirs/desi/users/mjwilson/DESILBGSPEC/{}/*'.format(tile))

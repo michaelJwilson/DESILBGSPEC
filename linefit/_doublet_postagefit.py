@@ -24,8 +24,9 @@ from   .twave import twave
 from   .doublet_obs import doublet_obs
 from   .matchedtemp_lineflux import matchedtemp_lineflux
 
-width  = 45.
-cwidth = 25
+width  = 25.
+cwidth = 10
+
 
 def doublet_chi2(z, twave, wave, res, flux, ivar, mask, continuum=0.0, sigmav=5., r=0.1, line_flux=None, linea=3726.032, lineb=3728.815):    
     '''
@@ -51,6 +52,9 @@ def doublet_fit(x0, fiber, rrz, rrzerr, spectra, lineb, plot=False):
 
     start           = time.time()
     cams            = spectra.flux.keys()
+
+    center = (1. + rrz) * lineb
+    limits = center + np.array([-width, width])
     
     def _X2(x):  
         z           = x[0]
@@ -61,23 +65,21 @@ def doublet_fit(x0, fiber, rrz, rrzerr, spectra, lineb, plot=False):
 
         result      = 0.0
         
-        for cam in ['b']:
-            wave      = spectra.wave[cam]
-            res       = Resolution(spectra.resolution_data[cam][fiber,:])
-            flux      = spectra.flux[cam][fiber,:]
-            ivar      = spectra.ivar[cam][fiber,:]
-            mask      = spectra.mask[cam][fiber,:]
-
-            flux      = np.array(flux, copy=True)
-
-            center    = (1. + rrz) * lineb
-            limits    = center + np.array([-width, width])
+        for cam in cams:
+            wave    = spectra.wave[cam]
+            res     = Resolution(spectra.resolution_data[cam][fiber,:])
+            flux    = spectra.flux[cam][fiber,:]
+            ivar    = spectra.ivar[cam][fiber,:]
+            mask    = spectra.mask[cam][fiber,:]
             
-            continuum = (mask == 0) & (wave > limits[0]) & (wave < limits[1]) & ((wave < (limits[0] + cwidth)) | (wave > (limits[1] - cwidth)))
+            continuum = (wave > limits[0]) & (wave < limits[1]) & ((wave < (limits[0] + cwidth)) | (wave > (limits[1] - cwidth)))
 
             if np.count_nonzero(continuum):
                 continuum = np.median(flux[continuum])
-                flux   -= continuum
+                flux     -= continuum
+
+            else:
+                return  0.0
                 
             tw      = twave(wave.min(), wave.max())
 
@@ -86,6 +88,45 @@ def doublet_fit(x0, fiber, rrz, rrzerr, spectra, lineb, plot=False):
             result += X2
             
         return  result
+
+    def _res(x):
+        z           = x[0]
+        v           = x[1]
+        lnA         = x[2]
+
+        line_flux   = np.exp(lnA)
+
+        residuals   = []
+
+        for cam in cams:
+            wave    = spectra.wave[cam]
+            res     = Resolution(spectra.resolution_data[cam][fiber,:])
+            flux    = spectra.flux[cam][fiber,:]
+            ivar    = spectra.ivar[cam][fiber,:]
+            mask    = spectra.mask[cam][fiber,:]
+
+            continuum = (wave > limits[0]) & (wave < limits[1]) & ((wave < (limits[0] + cwidth)) | (wave > (limits[1] - cwidth)))
+
+            if np.count_nonzero(continuum):
+                continuum = np.median(flux[continuum])
+                flux     -= continuum
+	    else:
+                return  0.0
+            
+            tw      = twave(wave.min(), wave.max())
+            
+            rflux   = doublet_obs(z, tw, wave, res, continuum=0.0, sigmav=v, r=0.0, linea=0.0, lineb=lineb)
+            rflux  *= line_flux
+
+            res     = np.sqrt(ivar[mask]) * np.abs(flux[mask] - rflux[mask])
+
+            residuals += res.tolist()
+
+        residuals = np.array(residuals) 
+
+        print(z, v, lnA, residuals.sum())
+        
+        return  residuals
         
     def mloglike(x):
         return  _X2(x) / 2.
@@ -111,7 +152,7 @@ def doublet_fit(x0, fiber, rrz, rrzerr, spectra, lineb, plot=False):
     ##
     rflux           = {}
     
-    for cam in ['b']:
+    for cam in cams:
         wave        = spectra.wave[cam]
         res         = Resolution(spectra.resolution_data[cam][fiber,:])
 
@@ -123,28 +164,26 @@ def doublet_fit(x0, fiber, rrz, rrzerr, spectra, lineb, plot=False):
     if plot & result.success:
         import pylab as pl
 
-        for cam in ['b']:
+        for cam in cams:
             wave    = spectra.wave[cam]
             res     = Resolution(spectra.resolution_data[cam][fiber,:])
             flux    = spectra.flux[cam][fiber,:]
             ivar    = spectra.ivar[cam][fiber,:]
             mask    = spectra.mask[cam][fiber,:]
 
-            center    = (1. + z) * lineb
-            limits    = center + np.array([-width, width])
-            
-            continuum = (mask == 0) & (wave > limits[0]) & (wave < limits[1]) & ((wave < (limits[0] + cwidth)) | (wave > (limits[1] - cwidth)))
+            continuum = (wave > limits[0]) & (wave < limits[1]) & ((wave < (limits[0] + cwidth)) | (wave > (limits[1] - cwidth)))
 
             if np.count_nonzero(continuum):
                 continuum = np.median(flux[continuum])
-                pl.axhline(continuum, c='c')
+                flux     -= continuum
 
-                pl.plot(wave,  flux - continuum, c='m')
-                
+	    else:
+                return  0.0
+
             pl.plot(wave[mask == 0], rflux[cam][mask == 0], label='Model {}'.format(cam), lw=0.5)
             pl.plot(wave[mask == 0],  flux[mask == 0], label='Observed {}'.format(cam), alpha=0.5, lw=0.5)
 
-            mask    = (mask == 0) & (1216. * (1. + (rrz - 0.01)) < wave) & (wave < 1216. * (1. + (rrz + 0.01)))
+            mask    = (1216. * (1. + (rrz - 0.01)) < wave) & (wave < 1216. * (1. + (rrz + 0.01)))
 
             if np.count_nonzero(mask):
                 rough = 0.8 * np.sum(flux[mask])
