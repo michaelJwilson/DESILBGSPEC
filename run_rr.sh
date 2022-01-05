@@ -80,4 +80,4 @@ echo
 echo 'srun -N 16 -n 512 -c 2 rrdesi_mpi -i '$COADD' --outfile '$RRZ' --details '$RRH5
 echo
 
-srun -N 16 -n 512 -c 2 rrdesi_mpi -i $COADD --outfile $RRZ --details $RRH5
+# srun -N 16 -n 512 -c 2 rrdesi_mpi -i $COADD --outfile $RRZ --details $RRH5
