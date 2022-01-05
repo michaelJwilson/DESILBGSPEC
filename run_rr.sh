@@ -10,7 +10,8 @@ export REDUX=/global/cfs/cdirs/desi/spectro/redux/
 export FUJI_TEST3=f3/
 export EVEREST=everest/
 
-export RELEASE=$FUJI_TEST3
+export RELEASE=$EVEREST
+# export RELEASE=$FUJI_TEST3
 
 export OUTDIR=/global/cscratch1/sd/mjwilson/DESILBGSPEC/$RELEASE/$VERSION/
 
@@ -44,8 +45,8 @@ export RR_TEMPLATE_DIR=/global/cscratch1/sd/mjwilson/DESILBGSPEC/templates/
 # e.g. /global/cfs/cdirs/desi/spectro/redux/daily/tiles/cumulative/80869/20210408
 
 # HETDEX-2; cumulative night 20210513.
-export TILE=80870
-export NIGHT=20210513 
+# export TILE=80870
+# export NIGHT=20210513 
 
 # HETDEX-3; cumulative night 20210416.
 # export TILE=80862
@@ -80,4 +81,4 @@ echo
 echo 'srun -N 16 -n 512 -c 2 rrdesi_mpi -i '$COADD' --outfile '$RRZ' --details '$RRH5
 echo
 
-# srun -N 16 -n 512 -c 2 rrdesi_mpi -i $COADD --outfile $RRZ --details $RRH5
+srun -N 16 -n 512 -c 2 rrdesi_mpi -i $COADD --outfile $RRZ --details $RRH5
