@@ -3,7 +3,8 @@
 # addrepo /global/homes/m/mjwilson/DESILBGSPEC/redrock/
 
 export PETAL=0
-export VERSION=v4.1 # 4.1 on Jan. 4th 2022; 3.1 on 4th October 2021; 2.1 on June 29 2021.                                                                                                            
+export VERSION=v4.1 # 4.1 on Jan. 4th 2022; 3.1 on 4th October 2021; 2.1 on June 29 2021.
+
 # [desi-data 5773]
 export REDUX=/global/cfs/cdirs/desi/spectro/redux/
 
@@ -31,6 +32,10 @@ export RR_TEMPLATE_DIR=/global/cscratch1/sd/mjwilson/DESILBGSPEC/templates/
 # Deprecated: export RRH5=/global/cscratch1/sd/mjwilson/DESILBGSPEC/$TILE/deep/redrock-$PETAL-$TILE-deep.h5
 # Deprecated: export RRZ=/global/cscratch1/sd/mjwilson/DESILBGSPEC/$TILE/deep/zbest-$PETAL-$TILE-deep.fits
 
+mask_list=( 'DESILBG_TMG_FINAL'
+            'DESILBG_BXU_FINAL'
+            'DESILBG_G_FINAL')
+
 # Clauds; cumulative night 20210430
 export TILE=80871
 export NIGHT=20210430
@@ -38,6 +43,9 @@ export NIGHT=20210430
 # Clauds-2; cumulative night 20210512
 # export TILE=80872
 # export NIGHT=20210512
+
+# mask_list=( 'HETDEX_MAIN'
+#             'HETDEX_HP')
 
 # HETDEX; cumulative night 20210408. 
 # export TILE=80869                                                                                                                              
@@ -89,5 +97,8 @@ echo
 
 # srun -N 16 -n 512 -c 2 rrdesi_mpi -i $COADD --outfile $RRZ --details $RRH5
 
-echo 'prospect_pages --spectra_files '$SYM' --zcat_files '$RRZ' --redrock_details_files '$RRH5' --outputdir '$OUTDIR'/tiles/cumulative/'$TILE'/'$NIGHT'/ --mask_type SV1_SCND_TARGET --targeting_mask DESILBG_BXU_FINAL --template_dir /global/cscratch1/sd/mjwilson/DESILBGSPEC/templates/ --titlepage_prefix prospect_desilbg_bxu_'$PETAL'_'$VERSION 
+for MASK in "${mask_list[@]}"
+do
+echo 'prospect_pages --spectra_files '$SYM' --zcat_files '$RRZ' --redrock_details_files '$RRH5' --outputdir '$OUTDIR'/tiles/cumulative/'$TILE'/'$NIGHT'/ --mask_type SV1_SCND_TARGET --targeting_mask '${MASK}' --template_dir /global/cscratch1/sd/mjwilson/DESILBGSPEC/templates/ --titlepage_prefix prospect_'${MASK}'_'$PETAL'_'$VERSION 
 echo
+done
