@@ -2,7 +2,7 @@
 #
 # addrepo /global/homes/m/mjwilson/DESILBGSPEC/redrock/
 
-export PETAL=9
+export PETAL=0
 export VERSION=v4.1 # 4.1 on Jan. 4th 2022; 3.1 on 4th October 2021; 2.1 on June 29 2021.                                                                                                            
 # [desi-data 5773]
 export REDUX=/global/cfs/cdirs/desi/spectro/redux/
@@ -10,7 +10,7 @@ export REDUX=/global/cfs/cdirs/desi/spectro/redux/
 export FUJI_TEST3=f3/
 export EVEREST=everest/
 
-export RELEASE=$EVEREST
+export RELEASE=$FUJI_TEST3
 # export RELEASE=$FUJI_TEST3
 
 export OUTDIR=/global/cscratch1/sd/mjwilson/DESILBGSPEC/$RELEASE/$VERSION/
@@ -26,14 +26,14 @@ export RR_TEMPLATE_DIR=/global/cscratch1/sd/mjwilson/DESILBGSPEC/templates/
 #
 # --  Input and output paths --
 #
-# export TILE=80871
-# export COADD=/global/cscratch1/sd/mjwilson/DESILBGSPEC/$TILE/deep/coadd-$PETAL-$TILE-deep.fits 
-# export RRH5=/global/cscratch1/sd/mjwilson/DESILBGSPEC/$TILE/deep/redrock-$PETAL-$TILE-deep.h5
-# export RRZ=/global/cscratch1/sd/mjwilson/DESILBGSPEC/$TILE/deep/zbest-$PETAL-$TILE-deep.fits
+# Deprecated: export TILE=80871
+# Deprecated: export COADD=/global/cscratch1/sd/mjwilson/DESILBGSPEC/$TILE/deep/coadd-$PETAL-$TILE-deep.fits 
+# Deprecated: export RRH5=/global/cscratch1/sd/mjwilson/DESILBGSPEC/$TILE/deep/redrock-$PETAL-$TILE-deep.h5
+# Deprecated: export RRZ=/global/cscratch1/sd/mjwilson/DESILBGSPEC/$TILE/deep/zbest-$PETAL-$TILE-deep.fits
 
 # Clauds; cumulative night 20210430
-# export TILE=80871
-# export NIGHT=20210430
+export TILE=80871
+export NIGHT=20210430
 
 # Clauds-2; cumulative night 20210512
 # export TILE=80872
@@ -57,6 +57,7 @@ export RR_TEMPLATE_DIR=/global/cscratch1/sd/mjwilson/DESILBGSPEC/templates/
 
 export COADD=$REDUX/$RELEASE/tiles/cumulative/$TILE/$NIGHT/coadd-$PETAL-$TILE-thru$NIGHT.fits
 
+export  SYM=$OUTDIR/tiles/cumulative/$TILE/$NIGHT/coadd-$PETAL-$TILE-thru$NIGHT.fits
 export RRH5=$OUTDIR/tiles/cumulative/$TILE/$NIGHT/rrdetails-$PETAL-$TILE-thru$NIGHT.h5
 export  RRZ=$OUTDIR/tiles/cumulative/$TILE/$NIGHT/redrock-$PETAL-$TILE-thru$NIGHT.fits
 
@@ -72,13 +73,21 @@ echo $COADD
 echo
 echo 'Output:'
 echo
-
+echo $SYM
 echo $RRH5
 echo $RRZ
+echo
+echo
+echo 'Linking'
+echo
+echo 'ln -s '$COADD' '$SYM
 echo
 echo 'Command:'
 echo
 echo 'srun -N 16 -n 512 -c 2 rrdesi_mpi -i '$COADD' --outfile '$RRZ' --details '$RRH5
 echo
 
-srun -N 16 -n 512 -c 2 rrdesi_mpi -i $COADD --outfile $RRZ --details $RRH5
+# srun -N 16 -n 512 -c 2 rrdesi_mpi -i $COADD --outfile $RRZ --details $RRH5
+
+echo 'prospect_pages --spectra_files '$SYM' --zcat_files '$RRZ' --redrock_details_files '$RRH5' --outputdir '$OUTDIR'/tiles/cumulative/'$TILE'/'$NIGHT'/ --mask_type SV1_SCND_TARGET --targeting_mask DESILBG_BXU_FINAL --template_dir /global/cscratch1/sd/mjwilson/DESILBGSPEC/templates/ --titlepage_prefix prospect_desilbg_bxu_'$PETAL'_'$VERSION 
+echo
