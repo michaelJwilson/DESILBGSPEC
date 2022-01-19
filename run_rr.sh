@@ -3,16 +3,20 @@
 # addrepo /global/homes/m/mjwilson/DESILBGSPEC/redrock/
 
 export PETAL=0
-export VERSION=v4.1 # 4.1 on Jan. 4th 2022; 3.1 on 4th October 2021; 2.1 on June 29 2021.
+
+# 5.1 on Jan 19th (f5), 4.1 on Jan. 4th 2022 (f3); 3.1 on 4th October 2021; 2.1 on June 29 2021.
+export VERSION=v5.1
 
 # [desi-data 5773]
 export REDUX=/global/cfs/cdirs/desi/spectro/redux/
 
+export FUJI_TEST3=f5/
 export FUJI_TEST3=f3/
 export EVEREST=everest/
 
-export RELEASE=$FUJI_TEST3
+export RELEASE=$FUJI_TEST5
 # export RELEASE=$FUJI_TEST3
+# export RELEASE=$EVEREST
 
 export OUTDIR=/global/cscratch1/sd/mjwilson/DESILBGSPEC/$RELEASE/$VERSION/
 
