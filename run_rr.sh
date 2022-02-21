@@ -4,18 +4,18 @@
 
 export PETAL=0
 
-# 5.1 on Jan 19th (f5), 4.1 on Jan. 4th 2022 (f3); 3.1 on 4th October 2021; 2.1 on June 29 2021.
+# 5.1 on Jan 19th (LBG zs only), 4.1 on Jan. 4th 2022 (f3); 3.1 on 4th October 2021; 2.1 on June 29 2021.
 export VERSION=v5.1
 
 # [desi-data 5773]
 export REDUX=/global/cfs/cdirs/desi/spectro/redux/
 
-export FUJI_TEST3=f5/
+# export FUJI_TEST3=f5/
 export FUJI_TEST3=f3/
 export EVEREST=everest/
 
-export RELEASE=$FUJI_TEST5
-# export RELEASE=$FUJI_TEST3
+# export RELEASE=$FUJI_TEST5
+export RELEASE=$FUJI_TEST3
 # export RELEASE=$EVEREST
 
 export OUTDIR=/global/cscratch1/sd/mjwilson/DESILBGSPEC/$RELEASE/$VERSION/
@@ -41,8 +41,8 @@ mask_list=( 'DESILBG_TMG_FINAL'
             'DESILBG_G_FINAL')
 
 # Clauds; cumulative night 20210430
-export TILE=80871
-export NIGHT=20210430
+# export TILE=80871
+# export NIGHT=20210430
 
 # Clauds-2; cumulative night 20210512
 # export TILE=80872
@@ -52,8 +52,8 @@ export NIGHT=20210430
 #             'HETDEX_HP')
 
 # HETDEX; cumulative night 20210408. 
-# export TILE=80869                                                                                                                              
-# export NIGHT=20210408  
+export TILE=80869                                                                                                                              
+export NIGHT=20210408  
 # e.g. /global/cfs/cdirs/desi/spectro/redux/daily/tiles/cumulative/80869/20210408
 
 # HETDEX-2; cumulative night 20210513.
@@ -99,10 +99,10 @@ echo
 echo 'srun -N 16 -n 512 -c 2 rrdesi_mpi -i '$COADD' --outfile '$RRZ' --details '$RRH5
 echo
 
-# srun -N 16 -n 512 -c 2 rrdesi_mpi -i $COADD --outfile $RRZ --details $RRH5
+srun -N 16 -n 512 -c 2 rrdesi_mpi -i $COADD --outfile $RRZ --details $RRH5
 
-for MASK in "${mask_list[@]}"
-do
-echo 'prospect_pages --spectra_files '$SYM' --zcat_files '$RRZ' --redrock_details_files '$RRH5' --outputdir '$OUTDIR'/tiles/cumulative/'$TILE'/'$NIGHT'/ --mask_type SV1_SCND_TARGET --targeting_mask '${MASK}' --template_dir /global/cscratch1/sd/mjwilson/DESILBGSPEC/templates/ --titlepage_prefix prospect_'${MASK}'_'$PETAL'_'$VERSION 
-echo
-done
+# for MASK in "${mask_list[@]}"
+# do
+# echo 'prospect_pages --spectra_files '$SYM' --zcat_files '$RRZ' --redrock_details_files '$RRH5' --outputdir '$OUTDIR'/tiles/cumulative/'$TILE'/'$NIGHT'/ --mask_type SV1_SCND_TARGET --targeting_mask '${MASK}' --template_dir /global/cscratch1/sd/mjwilson/DESILBGSPEC/templates/ --titlepage_prefix prospect_'${MASK}'_'$PETAL'_'$VERSION 
+# echo
+# done
